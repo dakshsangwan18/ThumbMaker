@@ -23,5 +23,9 @@ class Thumbnail(SQLModel, table=True):
 class Job(SQLModel, table=True):
     id: str = Field(default_factory=_uuid, primary_key=True)
     prompt: str = Field(default="")
-    num_thumbnails: int = Field(default=1, ge=1, le=10)
-    
+    num_thumbnails: int = Field(default=1, ge=1, le=3)
+    headshot_url: str = Field(default="")
+    status: str = Field(default="pending")
+    created_at: datetime = Field(default_factory=_now)
+
+    thumbnails: List[Thumbnail] = Relationship(back_populates="job")
