@@ -54,8 +54,20 @@ async def generate_single_thumbnail(thumbnail_id:str, prompt:str, headshot_url:s
             file_name=f"{thumbnail_id}.png",
             folder_path=f"thumbnails/{job_id}/"
             )
-        
-    except Exception as e:
-        pass
-    # upload this image
     # DB call save the URL + mark uploaded
+        with Session(engine) as session:
+            thumb = session.get(Thumbnail, thumbnail_id)
+            thumb.imagekit_url = url
+            thumb.status = "uploaded"
+            session.add(thumb)
+            session.commit()
+        logger.info(f"Thumbnail {thumbnail_id} generated and uploaded successfully.")
+
+    except Exception as e:
+        logger.error(f"Error generating thumbnail {thumbnail_id}: {str(e)}")
+        with Session(engine) as session:
+            thumb = session.get(Thumbnail, thumbnail_id)
+            thumb.status = "error"
+            thumb.error_message = str(e)[:500]
+            session.add(thumb)
+            session.commit()
