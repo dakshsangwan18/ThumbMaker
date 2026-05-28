@@ -71,3 +71,14 @@ async def generate_single_thumbnail(thumbnail_id:str, prompt:str, headshot_url:s
             thumb.error_message = str(e)[:500]
             session.add(thumb)
             session.commit()
+
+
+async def process_job(job_id:str):
+    # mark job as processing
+    # find all thumbnails for this job
+    # start one worker for each thumbnail
+    # wait all workers to finish
+    # mark job as completed/failed
+    with Session(engine) as session:
+        job = session.get(Job, job_id)
+        job.status = "processing"
