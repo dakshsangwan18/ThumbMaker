@@ -31,3 +31,17 @@ STYLES = {
 }
 
 STYLE_ORDER = ["bold_dramatic", "clean_minimal", "vibrant_energetic"]
+
+async def generate_single_thumbnail(thumbnail_id:str, prompt:str, headshot_url:str):
+    # DB mark -> generating
+    with Session(engine) as session:
+        thumb = session.get(Thumbnail, thumbnail_id)
+        thumb.status = "generating"
+        style_name= thumb.style_name
+        session.add(thumb)
+        session.commit()
+
+    style_prompt = STYLES[style_name]   
+    # AI call
+    # upload this image
+    # DB call save the URL + mark uploaded
