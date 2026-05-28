@@ -12,12 +12,12 @@ async def generate_thumbnail(prompt: str, style_prompt:str, headshot_url:str) ->
     Returns raw PNG bytes.
     """
 
-    full_prompt = {
+    full_prompt = (
         f"style_prompt\n\n"
         f"user request: {prompt}\n\n"
         "IMPORTANT: The generated thumbnail MUST prominently feature the person"
         "show in the provided reference headhsot photo. keep their likeness accurate."
-    }
+    )
 
     response = await client.responses.create(
         model="gpt-5.5",
