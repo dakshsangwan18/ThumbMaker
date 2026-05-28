@@ -43,5 +43,19 @@ async def generate_single_thumbnail(thumbnail_id:str, prompt:str, headshot_url:s
 
     style_prompt = STYLES[style_name]   
     # AI call
+    try:
+        image_byte = await generate_thumbnail(prompt, style_prompt, headshot_url)
+        with Session(engine) as session:
+            thumb = session.get(Thumbnail, thumbnail_id)
+            job_id = thumb.job_id
+    # upload this image
+        url = upload_file(
+            file_bytes=image_byte,
+            file_name=f"{thumbnail_id}.png",
+            folder_path=f"thumbnails/{job_id}/"
+            )
+        
+    except Exception as e:
+        pass
     # upload this image
     # DB call save the URL + mark uploaded
