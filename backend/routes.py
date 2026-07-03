@@ -34,6 +34,13 @@ class ThumbnailResponse(BaseModel):
     error_message: str | None = None
     variants: dict | None = None
 
+class JobResponse(BaseModel):
+    id: int
+    prompt: str
+    num_thumbnails: int
+    headshot_url: str
+    status: str
+    thumbnails: list[ThumbnailResponse]
 
 @router.post("/upload-headshot")
 async def upload_headshot(file: UploadFile = File(...)):
