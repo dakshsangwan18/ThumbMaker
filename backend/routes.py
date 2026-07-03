@@ -4,7 +4,7 @@ import asyncio
 import json
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File 
-from fastapi.responses import streamingresponse
+from fastapi.responses import Streamingresponse
 from pydantic import BaseModel
 from sqlmodel import Session, select
 
@@ -151,7 +151,7 @@ async def stream_job(job_id: str):
             
             await asyncio.sleep(1.5)
 
-    return streamingresponse(
+    return Streamingresponse(
             event_generator(), 
             media_type="text/event-stream",
             headers = {
