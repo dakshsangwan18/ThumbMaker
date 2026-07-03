@@ -77,3 +77,31 @@ async def create_job(request: createJobReaquest, session: Session = Depends(get_
     asyncio.create_task(process_job(job.id))
 
     return createJobResponse(job_id=job.id)
+
+@router.get("/jobs/{job_id}", response_model=JobResponse)
+def get_job(job_id: int, session: Session = Depends(get_session)):
+    job = session.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    thumbnails = session.exec(select(Thumbnail).where(Thumbnail.job_id == job_id)).all()
+
+    thumb_response = []
+    for t in thumbnails:
+        variants = get_variants(t.imagekit_url) if t.imagekit_url else None
+        thumb_response.append(ThumbnailResponse(
+            id=t.id,
+            style_name=t.style_name,
+            status=t.status,
+            imagekit_url=t.imagekit_url,
+            error_message=t.error_message,
+            variants=variants
+        ))  
+
+    return JobResponse(
+        id=job.id,
+        prompt=job.prompt,
+        num_thumbnails=job.num_thumbnails,
+        headshot_url=job.headshot_url,
+        status=job.status,
+        thumbnails=thumb_response
+    )       
