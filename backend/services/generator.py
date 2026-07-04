@@ -3,7 +3,7 @@ import logging
 
 from sqlmodel import Session, select
 from database import engine
-from models import Job, Thumbnail
+from models import Job, Thumbnail, JobStatus, ThumbnailStatus
 from services.openai_service import generate_thumbnail
 from services.imagekit_service import upload_file
 
@@ -36,7 +36,7 @@ async def generate_single_thumbnail(thumbnail_id:str, prompt:str, headshot_url:s
     # DB mark -> generating
     with Session(engine) as session:
         thumb = session.get(Thumbnail, thumbnail_id)
-        thumb.status = "generating"
+        thumb.status = ThumbnailStatus.GENERATING
         style_name= thumb.style_name
         session.add(thumb)
         session.commit()
@@ -58,7 +58,7 @@ async def generate_single_thumbnail(thumbnail_id:str, prompt:str, headshot_url:s
         with Session(engine) as session:
             thumb = session.get(Thumbnail, thumbnail_id)
             thumb.imagekit_url = url
-            thumb.status = "uploaded"
+            thumb.status = ThumbnailStatus.UPLOADED
             session.add(thumb)
             session.commit()
         logger.info(f"Thumbnail {thumbnail_id} generated and uploaded successfully.")
@@ -67,7 +67,7 @@ async def generate_single_thumbnail(thumbnail_id:str, prompt:str, headshot_url:s
         logger.error(f"Error generating thumbnail {thumbnail_id}: {str(e)}")
         with Session(engine) as session:
             thumb = session.get(Thumbnail, thumbnail_id)
-            thumb.status = "error"
+            thumb.status = ThumbnailStatus.FAILED
             thumb.error_message = str(e)[:500]
             session.add(thumb)
             session.commit()
@@ -81,7 +81,7 @@ async def process_job(job_id:str):
     # mark job as completed/failed
     with Session(engine) as session:
         job = session.get(Job, job_id)
-        job.status = "processing"
+        job.status = JobStatus.PROCESSING
         prompt = job.prompt
         headshot_url = job.headshot_url
         session.add(job)
@@ -102,8 +102,8 @@ async def process_job(job_id:str):
             thumbnails = session.exec(
             select(Thumbnail).where(Thumbnail.job_id == job_id)
             ).all()
-            all_failed = all(t.status == "failed" for t in thumbnails)
+            all_failed = all(t.status == ThumbnailStatus.FAILED for t in thumbnails)
             job = session.get(Job, job_id)
-            job.status = "failed" if all_failed else "completed"
+            job.status = JobStatus.FAILED if all_failed else JobStatus.COMPLETED
             session.add(job)
             session.commit()

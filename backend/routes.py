@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from sqlmodel import Session, select
 
 from database import get_session
-from models import Job, Thumbnail
+from models import Job, Thumbnail, ThumbnailStatus
 
 from services.generator import process_job, STYLE_ORDER
 from services.imagekit_service import upload_file, get_variants
@@ -123,7 +123,7 @@ async def stream_job(job_id: str):
                 for t in thumbnails:
                     if t.id in sent_thumbnails:
                         continue
-                    if t.status == "uploaded":
+                    if t.status == ThumbnailStatus.UPLOADED:
                         variants = get_variants(t.imagekit_url)
                         data = json.dumps({
                             "thumbnail_id": t.id,
@@ -134,7 +134,7 @@ async def stream_job(job_id: str):
                         yield f"event: thumbnail_ready\ndata: {data}"
                         sent_thumbnails.add(t.id)
 
-                    elif t.status == "failed":
+                    elif t.status == ThumbnailStatus.FAILED:
                         data = json.dumps({
                             "thumbnail_id": t.id,
                             "style_name": t.style_name,
@@ -143,7 +143,7 @@ async def stream_job(job_id: str):
                         yield f"event: thumbnail_failed\ndata: {data}"
                         sent_thumbnails.add(t.id)
 
-                all_done = all(t.status in ["uploaded", "failed"] for t in thumbnails)
+                all_done = all(t.status in [ThumbnailStatus.UPLOADED, ThumbnailStatus.FAILED] for t in thumbnails)
                 if all_done and len(sent_thumbnails) == len(thumbnails):
                     data = json.dumps({"job_id": job.id, "status": job.status})
                     yield f"event: job_complete\ndata: {data}"
