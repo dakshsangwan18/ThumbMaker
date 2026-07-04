@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { ArrowRight, Upload, Type, Download, Sparkles } from "lucide-react"
+import { ArrowRight, Upload, Type, Download } from "lucide-react"
 import Navbar from "@/components/Navbar"
 import { Button } from "@/components/ui/button"
 import { STYLE_LABELS, STYLE_DESCRIPTIONS } from "@/lib/types"
@@ -24,24 +24,60 @@ const steps = [
   },
 ]
 
-const styles: { name: StyleName; label: string; description: string; gradient: string }[] = [
+// Sample thumbnail compositions — show-don't-tell. These look like real output.
+interface SampleThumb {
+  style: StyleName
+  title: string
+  bg: string
+  titleColor: string
+  accent: string
+}
+
+const samples: SampleThumb[] = [
+  {
+    style: "bold_dramatic",
+    title: "I FAILED 100 TIMES",
+    bg: "radial-gradient(120% 100% at 30% 20%, oklch(0.28 0.04 50) 0%, oklch(0.14 0.015 50) 60%, oklch(0.10 0.01 50) 100%)",
+    titleColor: "oklch(0.96 0.02 70)",
+    accent: "oklch(0.74 0.15 65)",
+  },
+  {
+    style: "clean_minimal",
+    title: "FIRST $10K MONTH",
+    bg: "linear-gradient(135deg, oklch(0.94 0.02 75) 0%, oklch(0.97 0.015 75) 100%)",
+    titleColor: "oklch(0.22 0.02 50)",
+    accent: "oklch(0.45 0.10 50)",
+  },
+  {
+    style: "vibrant_energetic",
+    title: "VIRAL IN 24H",
+    bg: "linear-gradient(135deg, oklch(0.70 0.16 55) 0%, oklch(0.62 0.18 35) 50%, oklch(0.50 0.14 20) 100%)",
+    titleColor: "oklch(0.16 0.02 50)",
+    accent: "oklch(0.96 0.02 70)",
+  },
+]
+
+const stylesPreview: { name: StyleName; label: string; description: string; bg: string; textColor: string }[] = [
   {
     name: "bold_dramatic",
     label: STYLE_LABELS.bold_dramatic,
     description: STYLE_DESCRIPTIONS.bold_dramatic,
-    gradient: "from-violet-900 via-zinc-900 to-black",
+    bg: "radial-gradient(120% 100% at 30% 20%, oklch(0.28 0.04 50) 0%, oklch(0.14 0.015 50) 70%)",
+    textColor: "oklch(0.96 0.02 70)",
   },
   {
     name: "clean_minimal",
     label: STYLE_LABELS.clean_minimal,
     description: STYLE_DESCRIPTIONS.clean_minimal,
-    gradient: "from-zinc-100 via-zinc-200 to-zinc-300",
+    bg: "linear-gradient(135deg, oklch(0.94 0.02 75) 0%, oklch(0.97 0.015 75) 100%)",
+    textColor: "oklch(0.22 0.02 50)",
   },
   {
     name: "vibrant_energetic",
     label: STYLE_LABELS.vibrant_energetic,
     description: STYLE_DESCRIPTIONS.vibrant_energetic,
-    gradient: "from-fuchsia-500 via-violet-500 to-cyan-400",
+    bg: "linear-gradient(135deg, oklch(0.70 0.16 55) 0%, oklch(0.50 0.14 20) 100%)",
+    textColor: "oklch(0.16 0.02 50)",
   },
 ]
 
@@ -52,41 +88,85 @@ export default function Landing() {
     <div className="min-h-svh">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative mx-auto max-w-6xl px-6 pt-24 pb-32 md:pt-32 md:pb-40">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: easeOutQuart }}
-          className="flex flex-col items-center text-center"
-        >
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/50 px-3 py-1 text-xs text-muted-foreground">
-            <Sparkles className="size-3 text-primary" />
-            AI-powered thumbnail generation
-          </div>
-
-          <h1 className="max-w-4xl text-balance text-5xl font-semibold tracking-tight md:text-6xl lg:text-7xl">
-            Thumbnails that{" "}
-            <span className="text-primary">stop the scroll</span>.
-          </h1>
-
-          <p className="mt-6 max-w-xl text-pretty text-lg text-muted-foreground md:text-xl">
-            Upload a headshot, describe the vibe, and get publish-ready
-            thumbnails in three artistic styles — YouTube, Shorts, and square.
-          </p>
-
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-            <Button asChild size="lg" className="group">
-              <Link to="/app">
-                Start creating
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </Button>
-            <p className="text-sm text-muted-foreground">
-              No sign-up needed. Just upload and go.
+      {/* Hero — asymmetric editorial split. Show, don't tell. */}
+      <section className="relative mx-auto max-w-6xl px-6 pt-16 pb-24 md:pt-24 md:pb-32">
+        <div className="grid items-center gap-12 lg:grid-cols-12">
+          {/* Left: text */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: easeOutQuart }}
+            className="lg:col-span-5"
+          >
+            <h1 className="text-balance text-5xl font-semibold leading-[1.02] tracking-tight md:text-6xl lg:text-[4.5rem]">
+              Thumbnails that{" "}
+              <span className="text-primary">stop the scroll</span>.
+            </h1>
+            <p className="mt-6 max-w-md text-pretty text-lg text-muted-foreground">
+              Upload a headshot, describe the vibe, get publish-ready thumbnails
+              in three artistic styles — YouTube, Shorts, and square.
             </p>
-          </div>
-        </motion.div>
+            <div className="mt-10 flex items-center gap-4">
+              <Button asChild size="lg" className="group">
+                <Link to="/app">
+                  Start creating
+                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Right: sample thumbnail composition — the product's output IS the hero visual */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: easeOutQuart, delay: 0.1 }}
+            className="relative pb-24 lg:col-span-7"
+          >
+            <div className="relative mx-auto aspect-video max-w-xl lg:ml-auto lg:max-w-none">
+              {samples.map((s, i) => {
+                const isMain = i === 0
+                const positionClass = isMain
+                  ? "absolute inset-0 z-20"
+                  : i === 1
+                    ? "absolute -bottom-16 left-0 z-30 w-[44%] sm:-left-6"
+                    : "absolute -bottom-16 right-0 z-30 w-[44%] sm:-right-6"
+                const rotate = i === 0 ? 0 : i === 1 ? -4 : 5
+                return (
+                  <motion.div
+                    key={s.style}
+                    initial={{ opacity: 0, y: 24, rotate: 0 }}
+                    animate={{ opacity: 1, y: 0, rotate }}
+                    transition={{
+                      duration: 0.7,
+                      ease: easeOutQuart,
+                      delay: 0.2 + i * 0.12,
+                    }}
+                    className={`${positionClass} aspect-video overflow-hidden rounded-lg border border-border shadow-2xl`}
+                  >
+                    <div
+                      className="flex h-full w-full flex-col justify-end p-4 sm:p-5"
+                      style={{ background: s.bg }}
+                    >
+                      <span
+                        className="mb-1.5 text-[10px] font-semibold tracking-wide uppercase sm:text-[11px]"
+                        style={{ color: s.accent }}
+                      >
+                        {STYLE_LABELS[s.style]}
+                      </span>
+                      <span
+                        className="text-xl font-extrabold leading-[1.05] tracking-tight sm:text-2xl md:text-3xl"
+                        style={{ color: s.titleColor }}
+                      >
+                        {s.title}
+                      </span>
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* How it works — numbered sequence is earned here */}
@@ -97,8 +177,8 @@ export default function Landing() {
               From idea to thumbnail in under two minutes.
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              No design skills required. The AI does the heavy lifting; you
-              do the creative direction.
+              No design skills required. The AI does the heavy lifting; you do
+              the creative direction.
             </p>
           </div>
 
@@ -138,13 +218,13 @@ export default function Landing() {
               Three styles. Pick your energy.
             </h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Each generation produces up to three distinct visual styles.
-              Take the one that fits the video.
+              Each generation produces up to three distinct visual styles. Take
+              the one that fits the video.
             </p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
-            {styles.map((style, i) => (
+            {stylesPreview.map((style, i) => (
               <motion.div
                 key={style.name}
                 initial={{ opacity: 0, y: 16 }}
@@ -154,9 +234,13 @@ export default function Landing() {
                 className="flex flex-col overflow-hidden rounded-lg border border-border"
               >
                 <div
-                  className={`relative flex aspect-video items-center justify-center bg-gradient-to-br ${style.gradient}`}
+                  className="flex aspect-video items-center justify-center"
+                  style={{ background: style.bg }}
                 >
-                  <span className="text-sm font-medium text-white/90 mix-blend-difference">
+                  <span
+                    className="text-base font-semibold tracking-tight"
+                    style={{ color: style.textColor }}
+                  >
                     {style.label}
                   </span>
                 </div>
@@ -193,9 +277,7 @@ export default function Landing() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-8">
           <p className="text-sm text-muted-foreground">Thumbmaker</p>
-          <p className="text-sm text-muted-foreground">
-            Built for creators.
-          </p>
+          <p className="text-sm text-muted-foreground">Built for creators.</p>
         </div>
       </footer>
     </div>
