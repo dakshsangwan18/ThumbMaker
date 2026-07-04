@@ -11,7 +11,7 @@ from sqlmodel import Session, select
 from database import get_session
 from models import Job, Thumbnail, ThumbnailStatus
 
-from services.generator import process_job, STYLE_ORDER
+from services.generator import process_job, generate_single_thumbnail, STYLE_ORDER
 from services.imagekit_service import upload_file, get_variants
 
 logger = logging.getLogger(__name__)
@@ -103,6 +103,25 @@ def get_job(job_id: str, session: Session = Depends(get_session)):
         status=job.status,
         thumbnails=thumb_response
     )       
+
+@router.post("/jobs/{job_id}/thumbnails/{thumbnail_id}/regenerate")
+async def regenerate_thumbnail(job_id: str, thumbnail_id: str, session: Session = Depends(get_session)):
+    job = session.get(Job, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    thumb = session.get(Thumbnail, thumbnail_id)
+    if not thumb or thumb.job_id != job_id:
+        raise HTTPException(status_code=404, detail="Thumbnail not found")
+
+    thumb.status = ThumbnailStatus.PENDING
+    thumb.imagekit_url = None
+    thumb.error_message = None
+    session.add(thumb)
+    session.commit()
+
+    asyncio.create_task(generate_single_thumbnail(thumbnail_id, job.prompt, job.headshot_url))
+
+    return {"status": ThumbnailStatus.PENDING}
 
 @router.get("/jobs/{job_id}/stream")
 async def stream_job(job_id: str):
