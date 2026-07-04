@@ -13,10 +13,10 @@ async def generate_thumbnail(prompt: str, style_prompt:str, headshot_url:str) ->
     """
 
     full_prompt = (
-        f"style_prompt\n\n"
-        f"user request: {prompt}\n\n"
-        "IMPORTANT: The generated thumbnail MUST prominently feature the person"
-        "show in the provided reference headhsot photo. keep their likeness accurate."
+        f"{style_prompt}\n\n"
+        f"User request: {prompt}\n\n"
+        "IMPORTANT: The generated thumbnail MUST prominently feature the person "
+        "shown in the provided reference headshot photo. Keep their likeness accurate."
     )
 
     response = await client.responses.create(
