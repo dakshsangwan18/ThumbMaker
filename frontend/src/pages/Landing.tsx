@@ -113,7 +113,7 @@ export default function Landing() {
                 className="flex flex-col gap-4"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-primary tabular-nums">
+                  <span className="text-sm font-medium text-accent-foreground tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <step.icon className="size-5 text-muted-foreground" />

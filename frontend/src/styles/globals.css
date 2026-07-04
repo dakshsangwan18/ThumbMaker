@@ -5,73 +5,73 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Light theme — fully polished equal, not default */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.08 0.005 285);
+  /* Light theme — warm beige paper. The safelight's daylight counterpart. */
+  --background: oklch(0.935 0.020 75);
+  --foreground: oklch(0.22 0.020 50);
 
-  --card: oklch(0.97 0.005 285);
-  --card-foreground: oklch(0.08 0.005 285);
+  --card: oklch(0.955 0.016 75);
+  --card-foreground: oklch(0.22 0.020 50);
 
-  --popover: oklch(0.99 0.003 285);
-  --popover-foreground: oklch(0.08 0.005 285);
+  --popover: oklch(0.965 0.014 75);
+  --popover-foreground: oklch(0.22 0.020 50);
 
-  --primary: oklch(0.546 0.241 305);
-  --primary-foreground: oklch(1 0 0);
+  --primary: oklch(0.62 0.155 55);
+  --primary-foreground: oklch(0.16 0.020 50);
 
-  --secondary: oklch(0.96 0.005 285);
-  --secondary-foreground: oklch(0.08 0.005 285);
+  --secondary: oklch(0.905 0.022 75);
+  --secondary-foreground: oklch(0.22 0.020 50);
 
-  --muted: oklch(0.96 0.005 285);
-  --muted-foreground: oklch(0.45 0.018 285);
+  --muted: oklch(0.905 0.022 75);
+  --muted-foreground: oklch(0.48 0.030 60);
 
-  --accent: oklch(0.95 0.02 305);
-  --accent-foreground: oklch(0.546 0.241 305);
+  --accent: oklch(0.88 0.045 70);
+  --accent-foreground: oklch(0.45 0.10 50);
 
-  --destructive: oklch(0.58 0.20 25);
-  --destructive-foreground: oklch(1 0 0);
+  --destructive: oklch(0.55 0.20 25);
+  --destructive-foreground: oklch(0.96 0.010 75);
 
-  --success: oklch(0.55 0.16 145);
-  --success-foreground: oklch(1 0 0);
+  --success: oklch(0.52 0.13 150);
+  --success-foreground: oklch(0.96 0.010 75);
 
-  --border: oklch(0.91 0.003 277);
-  --input: oklch(0.91 0.003 277);
-  --ring: oklch(0.546 0.241 305);
+  --border: oklch(0.875 0.020 70);
+  --input: oklch(0.875 0.020 70);
+  --ring: oklch(0.62 0.155 55);
 
   --radius: 0.5rem;
 }
 
 .dark {
-  /* Dark theme — canonical, default. The Darkroom. */
-  --background: oklch(0.155 0.008 277);
-  --foreground: oklch(0.961 0.003 277);
+  /* Dark theme — canonical, default. The Darkroom under safelight. */
+  --background: oklch(0.165 0.012 50);
+  --foreground: oklch(0.955 0.008 70);
 
-  --card: oklch(0.20 0.008 277);
-  --card-foreground: oklch(0.961 0.003 277);
+  --card: oklch(0.21 0.014 50);
+  --card-foreground: oklch(0.955 0.008 70);
 
-  --popover: oklch(0.22 0.008 277);
-  --popover-foreground: oklch(0.961 0.003 277);
+  --popover: oklch(0.23 0.014 50);
+  --popover-foreground: oklch(0.955 0.008 70);
 
-  --primary: oklch(0.659 0.161 300);
-  --primary-foreground: oklch(0.155 0.008 277);
+  --primary: oklch(0.74 0.150 65);
+  --primary-foreground: oklch(0.165 0.012 50);
 
-  --secondary: oklch(0.22 0.008 277);
-  --secondary-foreground: oklch(0.961 0.003 277);
+  --secondary: oklch(0.21 0.014 50);
+  --secondary-foreground: oklch(0.955 0.008 70);
 
-  --muted: oklch(0.22 0.008 277);
-  --muted-foreground: oklch(0.691 0.012 270);
+  --muted: oklch(0.21 0.014 50);
+  --muted-foreground: oklch(0.70 0.018 65);
 
-  --accent: oklch(0.22 0.02 300);
-  --accent-foreground: oklch(0.659 0.161 300);
+  --accent: oklch(0.24 0.030 60);
+  --accent-foreground: oklch(0.74 0.150 65);
 
-  --destructive: oklch(0.65 0.18 25);
-  --destructive-foreground: oklch(0.961 0.003 277);
+  --destructive: oklch(0.50 0.19 25);
+  --destructive-foreground: oklch(0.955 0.008 70);
 
-  --success: oklch(0.65 0.15 145);
-  --success-foreground: oklch(0.961 0.003 277);
+  --success: oklch(0.48 0.14 150);
+  --success-foreground: oklch(0.955 0.008 70);
 
-  --border: oklch(0.26 0.010 277);
-  --input: oklch(0.26 0.010 277);
-  --ring: oklch(0.659 0.161 300);
+  --border: oklch(0.28 0.014 50);
+  --input: oklch(0.28 0.014 50);
+  --ring: oklch(0.74 0.150 65);
 }
 
 @theme inline {
