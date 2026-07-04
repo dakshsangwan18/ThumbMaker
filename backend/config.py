@@ -8,4 +8,12 @@ IMAGEKIT_PRIVATE_KEY = os.getenv("IMAGEKIT_PRIVATE_KEY", "")
 IMAGEKIT_PUBLIC_KEY = os.getenv("IMAGEKIT_PUBLIC_KEY", "")
 IMAGEKIT_URL_ENDPOINT = os.getenv("IMAGEKIT_URL_ENDPOINT", "")
 
-DATABASE_URL = "sqlite:///./thumbmaker.db"
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./thumbmaker.db")
+
+CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+    if origin.strip()
+]
+
+PORT = int(os.getenv("PORT", "8080"))
