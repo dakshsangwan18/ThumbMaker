@@ -32,3 +32,28 @@ export async function createjob({prompt, numThumbnails, headshotUrl}) {
     }
     return res.json();  
 }
+
+export async function subscribeToJob(jobId, {onThumbnailReady, onThumbnailFailed, onJobComplete, onError}){
+    const es = new EventSource(`${API_BASE}/jobs/${jobId}/stream`);
+
+    es.addEventListener("thumbnail_ready", (event) => {
+        onThumbnailReady(JSON.parse(event.data));
+    });
+
+    es.addEventListener("thumbnail_failed", (event) => {
+        onThumbnailFailed(JSON.parse(event.data));
+    });
+
+    es.addEventListener("job_complete", (event) => {
+        onJobComplete(JSON.parse(event.data));
+        es.close();
+    });
+
+    es.addEventListener("error", (event) => {
+        onError(event);
+        es.close();
+    });
+
+    return es;
+
+}
