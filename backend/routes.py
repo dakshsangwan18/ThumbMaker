@@ -5,7 +5,7 @@ import json
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File 
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlmodel import Session, select
 
 from database import get_session
@@ -19,16 +19,16 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api")
 
 #request response schemas
-class createJobReaquest(BaseModel):
+class CreateJobRequest(BaseModel):
     prompt: str
-    num_thumbnails: int
+    num_thumbnails: int = Field(ge=1, le=3)
     headshot_url: str
 
-class createJobResponse(BaseModel):
-    job_id: int
+class CreateJobResponse(BaseModel):
+    job_id: str
 
 class ThumbnailResponse(BaseModel):
-    id: int
+    id: str
     style_name: str
     status: str
     imagekit_url: str | None = None
@@ -36,7 +36,7 @@ class ThumbnailResponse(BaseModel):
     variants: dict | None = None
 
 class JobResponse(BaseModel):
-    id: int
+    id: str
     prompt: str
     num_thumbnails: int
     headshot_url: str
@@ -55,11 +55,8 @@ async def upload_headshot(file: UploadFile = File(...)):
     return {"url": url}
 
 
-@router.post("/jobs", response_model=createJobResponse)
-async def create_job(request: createJobReaquest, session: Session = Depends(get_session)):
-    if request.num_thumbnails < 1 or request.num_thumbnails > 3:
-        raise HTTPException(status_code=400, detail="num_thumbnails must be between 1 and 3")
-    
+@router.post("/jobs", response_model=CreateJobResponse)
+async def create_job(request: CreateJobRequest, session: Session = Depends(get_session)):
     job = Job(
         prompt=request.prompt,
         num_thumbnails=request.num_thumbnails,
@@ -77,10 +74,10 @@ async def create_job(request: createJobReaquest, session: Session = Depends(get_
     # Fire and forget style generation
     asyncio.create_task(process_job(job.id))
 
-    return createJobResponse(job_id=job.id)
+    return CreateJobResponse(job_id=job.id)
 
 @router.get("/jobs/{job_id}", response_model=JobResponse)
-def get_job(job_id: int, session: Session = Depends(get_session)):
+def get_job(job_id: str, session: Session = Depends(get_session)):
     job = session.get(Job, job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
