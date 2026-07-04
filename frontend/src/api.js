@@ -15,8 +15,8 @@ export async function uploadHeadshot(file) {
 
 }
 
-export async function createjob({prompt, numThumbnails, headshotUrl}) {
-    const res = await fetch(`${API_BASE}/create-job`, {
+export async function createJob({prompt, numThumbnails, headshotUrl}) {
+    const res = await fetch(`${API_BASE}/jobs`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
