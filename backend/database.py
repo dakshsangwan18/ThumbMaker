@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, create_engine, Session
-from config import DATABASE_URL
+from config import DATABASE_URL, DB_ECHO
 
-engine = create_engine(DATABASE_URL, echo=True, connect_args={"check_same_thread": False})
+engine = create_engine(DATABASE_URL, echo=DB_ECHO, connect_args={"check_same_thread": False})
 
 def create_tables():
     SQLModel.metadata.create_all(engine)

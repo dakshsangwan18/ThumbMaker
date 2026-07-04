@@ -9,6 +9,7 @@ IMAGEKIT_PUBLIC_KEY = os.getenv("IMAGEKIT_PUBLIC_KEY", "")
 IMAGEKIT_URL_ENDPOINT = os.getenv("IMAGEKIT_URL_ENDPOINT", "")
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./thumbmaker.db")
+DB_ECHO = os.getenv("DB_ECHO", "false").lower() == "true"
 
 CORS_ORIGINS = [
     origin.strip()
